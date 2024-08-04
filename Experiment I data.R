@@ -232,14 +232,14 @@ for(i in 1:B){
   }
 }
 ## Save the data
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/GM/"
+dic_name <- "./GM/"
 saveRDS(X, paste0(dic_name,"X.rds"))
 saveRDS(Theta0, paste0(dic_name,"Theta0.rds"))
 saveRDS(theta, paste0(dic_name,"theta.rds"))
 
 ## Generating the MCMC samples
 ### Read data
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/GM/"
+dic_name <- "./GM/"
 X <- readRDS(paste0(dic_name,"X.rds"))
 Theta0 <- readRDS(paste0(dic_name,"Theta0.rds"))
 theta <- readRDS(paste0(dic_name,"theta.rds"))
@@ -285,7 +285,6 @@ MRW_true <- function(n.chain = 3, chain.length = 10000, sigma_eps, X, tau){
       }
       alpha_list = rbind(alpha_list, alpha)
       t <- t+1
-      print(t)
     }
     res_list <- list("alpha_df" = alpha_list)
     return_list[[c]] <- res_list
