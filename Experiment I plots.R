@@ -28,7 +28,6 @@ library(transport)
 library(reshape2)
 library(Cairo)
 
-
 # Parameter values
 sigma = 1
 tau = 2
@@ -45,7 +44,7 @@ rho <- 0.5
 sigma_eps <- 0.5
 
 # Read data
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/GM/"
+dic_name <- "./GM/"
 X <- readRDS(paste0(dic_name,"X.rds"))
 Theta0 <- readRDS(paste0(dic_name,"Theta0.rds"))
 theta <- readRDS(paste0(dic_name,"theta.rds"))
@@ -56,7 +55,7 @@ samples_1 <- res_1[[1]]$alpha_df
 samples_2 <- res_2[[1]]$alpha_df
 samples_true <- result_true[[1]]$alpha_df
 
-# Wasserstein distance computation
+# 2-Wasserstein distance computation
 set.seed(0)
 prior.mean = colMeans(Theta0)
 prior.cov = cov(Theta0)
@@ -77,9 +76,9 @@ for(c in 1:n.chain){
 W2G = W2G/(n.chain)
 W2M = W2M/(n.chain)
 W2gk = W2gk/(n.chain)
-saveRDS(W2G,paste0(dic_name,"W2G.rds"))
-saveRDS(W2M,paste0(dic_name,"W2M.rds"))
-saveRDS(W2gk,paste0(dic_name,"W2gk.rds"))
+print(W2G)
+print(W2M)
+print(W2gk)
 
 # Running time comparison
 init.time_1 <- 0
@@ -108,8 +107,8 @@ for(i in 1:chain.length){
   tim_2[i] = temp 
 }
 
-tim_1[chain.length]/chain.length
-tim_2[chain.length]/chain.length
+print(tim_1[chain.length]/chain.length)
+print(tim_2[chain.length]/chain.length)
 
 # MCMC convergence diagnostics
 chain.prep <- function(dat, n.chain){
@@ -174,7 +173,7 @@ Rhat_m = ggplot(melt(df_m, c("q","last.iter"), value.name="shrink_factor"),
   guides(colour = guide_legend(keywidth = 5, keyheight = 5),  
          linetype = guide_legend(keywidth = 5, keyheight = 5))
 Rhat <- ggarrange(Rhat_g, Rhat_m, nrow = 2)
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/GMM_Rhat.pdf", plot = Rhat, device = cairo_pdf, width = 32, height = 20, dpi = 300, bg = "white")
+ggsave("./Figs/GMM_Rhat.pdf", plot = Rhat, device = cairo_pdf, width = 32, height = 20, dpi = 300, bg = "white")
 
 ## Traceplot
 df_g <- data.frame(type = rep("Graph-enabled MCMC", each = 2*chain.length), 
@@ -195,7 +194,7 @@ traceplot = ggplot(df_combined, aes(x = steps, y = states)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=80))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/traceplot.pdf", plot = traceplot, device = cairo_pdf, width = 35, height = 18, dpi = 600, bg = "white")
+ggsave("./Figs/traceplot.pdf", plot = traceplot, device = cairo_pdf, width = 35, height = 18, dpi = 600, bg = "white")
 
 ## ACF_plot
 bacf_g_1 <- acf(samples_1[,1], plot = FALSE)
@@ -230,7 +229,7 @@ ACFplot = ggplot(bacf_df_combined, aes(x = lag, y = acf)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/acf_GMM.pdf", plot = ACFplot, device = cairo_pdf, width = 22, height = 12, dpi = 600)
+ggsave("./Figs/acf_GMM.pdf", plot = ACFplot, device = cairo_pdf, width = 22, height = 12, dpi = 600)
 
 ## Effective sample size
 ess_g <-rep(0,2)
@@ -379,7 +378,7 @@ plot3 <- ggplot(g_data, aes(x,y))+
         legend.key = element_rect(fill = "white", color = NA))
 
 fig1 <- ggarrange(plot1, ggarrange(plot2, plot3, common.legend = TRUE, legend = "bottom"), nrow = 1, widths = c(1, 2), legend = "bottom")
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/GMM_contour.pdf", plot = fig1, device = cairo_pdf, width = 20, height = 7.5, dpi = 300, bg = "white")
+ggsave("./Figs/GMM_contour.pdf", plot = fig1, device = cairo_pdf, width = 20, height = 7.5, dpi = 300, bg = "white")
 
 ## Comparing posterior distributions
 df_g = data.frame(x=samples_1[(chain.length/2+1):chain.length,1], y=samples_1[(chain.length/2+1):chain.length,2])
@@ -441,6 +440,6 @@ q <- ggplot(df_combined, aes(x = dimension, y = states, fill = type)) +
                               label.theme = element_text(size = 35)))
 
 Comparison <- ggarrange(p, q, nrow = 2) 
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/Comparing.pdf", plot = Comparison, device = cairo_pdf, width = 20, height = 15, dpi = 300, bg = "white")
+ggsave("./Figs/Comparing.pdf", plot = Comparison, device = cairo_pdf, width = 20, height = 15, dpi = 300, bg = "white")
 
 
