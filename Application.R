@@ -23,6 +23,7 @@ library(kableExtra)
 library(ggplot2)
 library(tidyverse)
 library(gridExtra)
+library(Cairo)
 
 set.seed(0)
 
@@ -81,7 +82,7 @@ gelman.diag(res_pre_exp)
 summary(res_pre_exp)
 
 ## Saving the results
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/Application/"
+dic_name <- "./Application/"
 saveRDS(res_pre_pilot, paste0(dic_name,"Posterior_pilot.rds"))
 saveRDS(res_pre_exp, paste0(dic_name,"Posterior_exp.rds"))
 
@@ -89,7 +90,7 @@ saveRDS(res_pre_exp, paste0(dic_name,"Posterior_exp.rds"))
 d <- 4
 B <- 5000 #number of posterior draws from the reference study
 n.iter <- 20000
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/Application/"
+dic_name <- "./Application/"
 res_pre_pilot <- readRDS(paste0(dic_name,"Posterior_pilot.rds"))
 res_pre_exp <- readRDS(paste0(dic_name,"Posterior_exp.rds"))
 Theta_pilot <- res_pre_pilot[[1]][(n.iter-B+1):n.iter,]
@@ -124,9 +125,9 @@ box_plot <- ggplot(df_combined, aes(x = dimension, y = states, fill = type)) +
   theme(text = element_text(size = 25),
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/app1.pdf", plot = box_plot, device = cairo_pdf, width = 12, height = 7, dpi = 300, bg = "white")
+ggsave("./Figs/app1.pdf", plot = box_plot, device = cairo_pdf, width = 12, height = 7, dpi = 300, bg = "white")
 
-# Functions for graph-enabled MCMC
+# Functions for generalized graph-enabled MCMC
 ## Log likelihood function
 log_L_func <- function(X, y, n, beta){
   res <- 0
@@ -145,7 +146,7 @@ log_prior <- function(beta){
 ### Parameters: n.chain: number of chains
 ###             chain.length: length of one chain
 ###             k, h, hp, rho: algorithm parameters, where
-###                hp: standard deviation for Gaussian noise added to \theta_T
+###                hp: standard deviation for Gaussian noise added to theta_T
 ###             Theta: prior samples for theta_C
 ###             theta_init: initial value for theta_T
 ###             X, y: observation matrix 
@@ -249,10 +250,10 @@ mcmc.sim <- function(n.chain=2, chain.length, k, h, hp, rho, Theta, theta_init, 
 }
 
 # Simulation using graph-enabled MCMC
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/Application/"
+dic_name <- "./Application/"
 X_dat <- as.matrix(cbind(rep(1,nrow(gallup2)), gallup2[,c("fluid_dummy", "round_num")],
                          gallup2[,"round_num"]*gallup2[,"fluid_dummy"]))
-Theta <- Theta_pilot[, 3:4]
+Theta <- Theta_pilot[,3:4]
 num_sample <- dim(Theta)[1]
 saveRDS(Theta, paste0(dic_name,"Theta"))
 Theta <- readRDS(paste0(dic_name,"Theta"))
@@ -267,7 +268,7 @@ result <- mcmc.sim(n.chain = n.chain, chain.length = chain.length, k=k,  h=h, hp
 list.save(result, paste0(dic_name, "result.rdata"))
 
 # Visualizing the results from graph-enabled MCMC
-dic_name <- "/Users/chenyangzhong/Desktop/Data_paper/Application/"
+dic_name <- "./Application/"
 result <- list.load(paste0(dic_name,"result.rdata"))
 samples <- result[[1]]$alpha_df
 df_pilot <- data.frame(Theta_pilot[,3:4])
@@ -301,7 +302,7 @@ box_plot <- ggplot(df_combined, aes(x = dimension, y = states, fill = type)) +
   theme(text = element_text(size = 28),
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/app2.pdf", plot = box_plot, device = cairo_pdf, width = 10, height = 7.5, dpi = 300, bg = "white")
+ggsave("./Figs/app2.pdf", plot = box_plot, device = cairo_pdf, width = 10, height = 7.5, dpi = 300, bg = "white")
 
 data1 <- df_pilot
 data2 <- df_exp
@@ -329,7 +330,7 @@ p <- ggplot(data1, aes(x=x,y=y)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         plot.title = element_text(hjust = 0.5))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/app3.pdf", plot = p, device = cairo_pdf, width = 10, height = 7.5, dpi = 300, bg = "white")
+ggsave("./Figs/app3.pdf", plot = p, device = cairo_pdf, width = 10, height = 7.5, dpi = 300, bg = "white")
 
 
 
