@@ -193,7 +193,7 @@ MRW <- function(n.chain = 3, chain.length, sigma_eps, h, Theta, X_ny, y_ny){
     t <- 1
     
     while(t<chain.length){
-      start.time <-Sys.time()
+      start.time <- Sys.time()
       eps <- rmvnorm(1, mean = rep(0,d), sigma = diag(sigma_eps^2,d))
       alpha_new <- alpha + eps
       temp <- c(pi_hat_func(alpha_new,Theta,h), log_L_func(alpha_new, X_ny, y_ny, m),
@@ -239,7 +239,7 @@ Generate_data <- function(m, d, mu1, mu2){
   for(i in 1:m){
     y_ny[i] <- rbinom(1, 1, prob = log_term[i]/(1+log_term[i]))
   }
-  dic_name <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",")
+  dic_name <- paste0("./OUD/d=", d, ",")
   saveRDS(X_ohio, paste0(dic_name,"X_ohio.rds"))
   saveRDS(y_ohio, paste0(dic_name,"y_ohio.rds"))
   saveRDS(X_ny, paste0(dic_name,"X_ny.rds"))
@@ -249,7 +249,7 @@ Generate_data <- function(m, d, mu1, mu2){
 
 # Posterior sampling
 Posterior_sampling <- function(m, d, n.iter = 40000){
-  dic_name <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",")
+  dic_name <- paste0("./OUD/d=", d, ",")
   X_ohio <- readRDS(paste0(dic_name,"X_ohio.rds"))
   y_ohio <- readRDS(paste0(dic_name,"y_ohio.rds"))
   X_ny <- readRDS(paste0(dic_name,"X_ny.rds"))
@@ -274,13 +274,13 @@ Posterior_sampling <- function(m, d, n.iter = 40000){
 
 # Simulations using the graph-enabled MCMC algorithm and the Metropolis random walk
 Simulations <- function(B, d, n.chain, chain.length, k, h, rho, sigma_eps){
-  dic_name <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",")
+  dic_name <- paste0("./OUD/d=", d, ",")
   X_ny <- readRDS(paste0(dic_name,"X_ny.rds"))
   y_ny <- readRDS(paste0(dic_name,"y_ny.rds"))
   samps_ohio <- readRDS(paste0(dic_name,"samps_ohio.rds"))
   n.iter = dim(samps_ohio[[1]])[1]
   Theta_ohio <- samps_ohio[[1]][(n.iter-B+1):n.iter,]
-  dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+  dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
   # Graph-enabled MCMC
   result <- mcmc.sim(n.chain=n.chain, chain.length=chain.length, k=k, h=h, rho=rho, Theta=Theta_ohio, X_ny=X_ny, y_ny=y_ny)
   list.save(result, paste0(dic_name_B,"result.rdata"))

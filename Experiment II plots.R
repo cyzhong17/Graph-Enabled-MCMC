@@ -37,14 +37,15 @@ n.iter = 40000
 # Loading data
 ## d=2
 d = 2
-dic_name <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",")
+dic_name <- paste0("./OUD/d=", d, ",")
 samps_ohio <- readRDS(paste0(dic_name,"samps_ohio.rds"))
 Theta_ohio_2 <- samps_ohio[[1]][(n.iter-B+1):n.iter,]
 samps_ny <- readRDS(paste0(dic_name,"samps_ny.rds"))
 Theta_ny_2 <- samps_ny[[1]][(n.iter-B+1):n.iter,]
 samps_true <- readRDS(paste0(dic_name,"samps_true.rds"))
+res_2_true <- samps_true
 Theta_true_2 <- samps_true[[1]][(n.iter-B+1):n.iter,]
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_2_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_2_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 samples_2_G <- res_2_G[[1]]$alpha_df
@@ -52,14 +53,15 @@ samples_2_M <- res_2_M[[1]]$alpha_df
 
 ## d=6
 d = 6
-dic_name <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",")
+dic_name <- paste0("./OUD/d=", d, ",")
 samps_ohio <- readRDS(paste0(dic_name,"samps_ohio.rds"))
 Theta_ohio_6 <- samps_ohio[[1]][(n.iter-B+1):n.iter,]
 samps_ny <- readRDS(paste0(dic_name,"samps_ny.rds"))
 Theta_ny_6 <- samps_ny[[1]][(n.iter-B+1):n.iter,]
 samps_true <- readRDS(paste0(dic_name,"samps_true.rds"))
+res_6_true <- samps_true
 Theta_true_6 <- samps_true[[1]][(n.iter-B+1):n.iter,]
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 samples_6_G <- res_6_G[[1]]$alpha_df
@@ -67,30 +69,30 @@ samples_6_M <- res_6_M[[1]]$alpha_df
 
 ## d=10
 d = 10
-dic_name <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",")
+dic_name <- paste0("./OUD/d=", d, ",")
 samps_ohio <- readRDS(paste0(dic_name,"samps_ohio.rds"))
 Theta_ohio_10 <- samps_ohio[[1]][(n.iter-B+1):n.iter,]
 samps_ny <- readRDS(paste0(dic_name,"samps_ny.rds"))
 Theta_ny_10 <- samps_ny[[1]][(n.iter-B+1):n.iter,]
 samps_true <- readRDS(paste0(dic_name,"samps_true.rds"))
+res_10_true <- samps_true
 Theta_true_10 <- samps_true[[1]][(n.iter-B+1):n.iter,]
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_10_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_10_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 samples_10_G <- res_10_G[[1]]$alpha_df
 samples_10_M <- res_10_M[[1]]$alpha_df
 
-
-# 2-Wasserstein distance between true and estimated posteriors
+# 2-Wasserstein distance computation
 ## d=2
 W2G_2 = 0
 W2M_2 = 0
 for(c in 1:n.chain){
-  sample_true <- Theta_true_2
+  sample_true <- res_2_true[[c]]
   sample_1 <- res_2_G[[c]]$alpha_df
   sample_2 <- res_2_M[[c]]$alpha_df
-  W2G_2 = W2G_2 + wasserstein(pp(sample_true[(chain.length/2+1):chain.length,]), pp(sample_1[(chain.length/2+1):chain.length,]), p=2)
-  W2M_2 = W2M_2 + wasserstein(pp(sample_true[(chain.length/2+1):chain.length,]), pp(sample_2[(chain.length/2+1):chain.length,]), p=2)
+  W2G_2 = W2G_2 + wasserstein(pp(sample_true[(n.iter-chain.length/2+1):n.iter,]), pp(sample_1[(chain.length/2+1):chain.length,]), p=2)
+  W2M_2 = W2M_2 + wasserstein(pp(sample_true[(n.iter-chain.length/2+1):n.iter,]), pp(sample_2[(chain.length/2+1):chain.length,]), p=2)
 }
 W2G_2 = W2G_2/(n.chain)
 W2M_2 = W2M_2/(n.chain)
@@ -102,11 +104,11 @@ print(W2M_2)
 W2G_6 = 0
 W2M_6 = 0
 for(c in 1:n.chain){
-  sample_true <- Theta_true_6
+  sample_true <- res_6_true[[c]]
   sample_1 <- res_6_G[[c]]$alpha_df
   sample_2 <- res_6_M[[c]]$alpha_df
-  W2G_6 = W2G_6 + wasserstein(pp(sample_true[(chain.length/2+1):chain.length,]), pp(sample_1[(chain.length/2+1):chain.length,]), p=2)
-  W2M_6 = W2M_6 + wasserstein(pp(sample_true[(chain.length/2+1):chain.length,]), pp(sample_2[(chain.length/2+1):chain.length,]), p=2)
+  W2G_6 = W2G_6 + wasserstein(pp(sample_true[(n.iter-chain.length/2+1):n.iter,]), pp(sample_1[(chain.length/2+1):chain.length,]), p=2)
+  W2M_6 = W2M_6 + wasserstein(pp(sample_true[(n.iter-chain.length/2+1):n.iter,]), pp(sample_2[(chain.length/2+1):chain.length,]), p=2)
 }
 W2G_6 = W2G_6/(n.chain)
 W2M_6 = W2M_6/(n.chain)
@@ -118,11 +120,11 @@ print(W2M_6)
 W2G_10 = 0
 W2M_10 = 0
 for(c in 1:n.chain){
-  sample_true <- Theta_true_10
+  sample_true <- res_10_true[[c]]
   sample_1 <- res_10_G[[c]]$alpha_df
   sample_2 <- res_10_M[[c]]$alpha_df
-  W2G_10 = W2G_10 + wasserstein(pp(sample_true[(chain.length/2+1):chain.length,]), pp(sample_1[(chain.length/2+1):chain.length,]), p=2)
-  W2M_10 = W2M_10 + wasserstein(pp(sample_true[(chain.length/2+1):chain.length,]), pp(sample_2[(chain.length/2+1):chain.length,]), p=2)
+  W2G_10 = W2G_10 + wasserstein(pp(sample_true[(n.iter-chain.length/2+1):n.iter,]), pp(sample_1[(chain.length/2+1):chain.length,]), p=2)
+  W2M_10 = W2M_10 + wasserstein(pp(sample_true[(n.iter-chain.length/2+1):n.iter,]), pp(sample_2[(chain.length/2+1):chain.length,]), p=2)
 }
 W2G_10 = W2G_10/(n.chain)
 W2M_10 = W2M_10/(n.chain)
@@ -152,7 +154,6 @@ P_2 <- ggplot(df_ohio_2, aes(x=x,y=y)) + coord_equal() +
         axis.title.y = element_text(margin = margin(r = 12)),
         plot.title = element_text(hjust = 0.5, margin = margin(b = 10)),
         legend.position = "bottom", legend.text = element_text(size = 28))
-
 ## d=6
 df_ohio_6 = data.frame(x=Theta_ohio_6[,1], y=Theta_ohio_6[,2])
 df_ny_6 = data.frame(x=Theta_ny_6[,1], y=Theta_ny_6[,2])
@@ -160,7 +161,7 @@ df_G_6 = data.frame(x=samples_6_G[(chain.length/2+1):chain.length,1], y=samples_
 P_6 <- ggplot(df_ohio_6, aes(x=x,y=y)) + coord_equal() +
   geom_point(aes(x, y, color = "Ohio posterior samples"), size = 1) +
   geom_density_2d(data = df_ny_6, aes(color = "New York posterior with uninformative prior"), h = 0.2, linetype = "dashed") + 
-  geom_density_2d(data = df_true_6, aes(color = "New York posterior with informative prior via graph-enabled MCMC"), h = 0.2) +
+  geom_density_2d(data = df_G_6, aes(color = "New York posterior with informative prior via graph-enabled MCMC"), h = 0.2) +
   scale_color_manual(name = "", values = color_map) +
   guides(color = guide_legend(nrow = 3,
                               keyheight = unit(3, "line"),
@@ -171,7 +172,6 @@ P_6 <- ggplot(df_ohio_6, aes(x=x,y=y)) + coord_equal() +
         axis.title.y = element_text(margin = margin(r = 12)),
         plot.title = element_text(hjust = 0.5, margin = margin(b = 10)), 
         legend.position = "bottom", legend.text = element_text(size = 28))
-
 ## d=10
 df_ohio_10 = data.frame(x=Theta_ohio_10[,1], y=Theta_ohio_10[,2])
 df_ny_10 = data.frame(x=Theta_ny_10[,1], y=Theta_ny_10[,2])
@@ -192,12 +192,12 @@ P_10 <- ggplot(df_ohio_10, aes(x=x,y=y)) + coord_equal() +
         legend.position = "bottom", legend.text = element_text(size = 28))
 ## Combining the figures
 P <- ggarrange(P_2, P_6, P_10, common.legend = TRUE, legend = "bottom", ncol=3, nrow=1, align = "hv")
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/OUD_contour.png", plot = P, width = 20, height = 7.5, dpi = 300, bg = "white")
+ggsave("./Figs/OUD_contour.pdf", plot = P, device = cairo_pdf, width = 20, height = 7.5, dpi = 300, bg = "white")
 
 # Running time comparison
 ## d=2
 d = 2
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_2_10000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_2_10000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_2_10000_G <- 0
@@ -217,7 +217,7 @@ print(ave.time_2_10000_G)
 print(ave.time_2_10000_M)
 ## d=6
 d = 6
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_10000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_10000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_6_10000_G <- 0
@@ -237,7 +237,7 @@ print(ave.time_6_10000_G)
 print(ave.time_6_10000_M)
 ## d=10
 d = 10
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_10_10000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_10_10000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_10_10000_G <- 0
@@ -290,7 +290,7 @@ ACFplot_2 = ggplot(bacf_df_2_combined, aes(x = lag, y = acf)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/acf d=2.pdf", plot = ACFplot_2, device = cairo_pdf, width = 22, height = 12, dpi = 600)
+ggsave("./Figs/acf d=2.pdf", plot = ACFplot_2, device = cairo_pdf, width = 22, height = 12, dpi = 600)
 
 ## d=6
 ### Graph-enabled MCMC, beta1
@@ -325,7 +325,7 @@ ACFplot_6 = ggplot(bacf_df_6_combined, aes(x = lag, y = acf)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/acf d=6.pdf", plot = ACFplot_6, device = cairo_pdf, width = 22, height = 12, dpi = 600)
+ggsave("./Figs/acf d=6.pdf", plot = ACFplot_6, device = cairo_pdf, width = 22, height = 12, dpi = 600)
 
 ## d=10
 ### Graph-enabled MCMC, beta1
@@ -360,8 +360,7 @@ ACFplot_10 = ggplot(bacf_df_10_combined, aes(x = lag, y = acf)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/acf d=10.pdf", plot = ACFplot_10, device = cairo_pdf, width = 22, height = 12, dpi = 600)
-
+ggsave("./Figs/acf d=10.pdf", plot = ACFplot_10, device = cairo_pdf, width = 22, height = 12, dpi = 600)
 
 # MCMC convergence diagnostics
 chain.prep <- function(dat, n.chain){
@@ -453,7 +452,7 @@ Rhat_2_M = ggplot(melt(df_2_M, c("q","last.iter"), value.name="shrink_factor"),
   guides(colour = guide_legend(keywidth = 3, keyheight = 3),  
          linetype = guide_legend(keywidth = 3, keyheight = 3))
 Rhat_2 <- ggarrange(Rhat_2_G, Rhat_2_M, nrow = 2)
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/R d=2.pdf", plot = Rhat_2, device = cairo_pdf, width = 22, height = 12, dpi = 300)
+ggsave("./Figs/R d=2.pdf", plot = Rhat_2, device = cairo_pdf, width = 22, height = 12, dpi = 300)
 ## d=6
 gp_6_G = gelman.plot(chain_6_G)
 gp_6_M = gelman.plot(chain_6_M)
@@ -500,7 +499,7 @@ Rhat_6_M = ggplot(melt(df_6_M, c("q","last.iter"), value.name="shrink_factor"),
   guides(colour = guide_legend(keywidth = 3, keyheight = 3),  
          linetype = guide_legend(keywidth = 3, keyheight = 3))
 Rhat_6 <- ggarrange(Rhat_6_G, Rhat_6_M, nrow = 2)
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/R d=6.pdf", plot = Rhat_6, device = cairo_pdf, width = 22, height = 12, dpi = 300)
+ggsave("./Figs/R d=6.pdf", plot = Rhat_6, device = cairo_pdf, width = 22, height = 12, dpi = 300)
 ## d=10
 gp_10_G = gelman.plot(chain_10_G)
 gp_10_M = gelman.plot(chain_10_M)
@@ -547,7 +546,7 @@ Rhat_10_M = ggplot(melt(df_10_M, c("q","last.iter"), value.name="shrink_factor")
   guides(colour = guide_legend(keywidth = 3, keyheight = 3),  
          linetype = guide_legend(keywidth = 3, keyheight = 3))
 Rhat_10 <- ggarrange(Rhat_10_G, Rhat_10_M, nrow = 2)
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/R d=10.pdf", plot = Rhat_10, device = cairo_pdf, width = 22, height = 12, dpi = 300)
+ggsave("./Figs/R d=10.pdf", plot = Rhat_10, device = cairo_pdf, width = 22, height = 12, dpi = 300)
 
 # Traceplot
 ## d=2
@@ -569,7 +568,7 @@ traceplot_2 = ggplot(df_combined_2, aes(x = steps, y = states)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/traceplot d=2.pdf", plot = traceplot_2, device = cairo_pdf, width = 30, height = 15, dpi = 600, bg = "white")
+ggsave("./Figs/traceplot d=2.pdf", plot = traceplot_2, device = cairo_pdf, width = 30, height = 15, dpi = 600, bg = "white")
 ## d=6
 df_6_G <- data.frame(type = rep("Graph-enabled MCMC", each = 2*chain.length), 
                      steps = rep(1:chain.length, 2),
@@ -589,7 +588,7 @@ traceplot_6 = ggplot(df_combined_6, aes(x = steps, y = states)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/traceplot d=6.pdf", plot = traceplot_6, device = cairo_pdf, width = 30, height = 15, dpi = 600, bg = "white")
+ggsave("./Figs/traceplot d=6.pdf", plot = traceplot_6, device = cairo_pdf, width = 30, height = 15, dpi = 600, bg = "white")
 ## d=10
 df_10_G <- data.frame(type = rep("Graph-enabled MCMC", each = 2*chain.length), 
                      steps = rep(1:chain.length, 2),
@@ -609,7 +608,7 @@ traceplot_10 = ggplot(df_combined_10, aes(x = steps, y = states)) +
         axis.title.x = element_text(margin = margin(t = 12)),
         axis.title.y = element_text(margin = margin(r = 12)),
         legend.text = element_text(size=70))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/traceplot d=10.pdf", plot = traceplot_10, device = cairo_pdf, width = 30, height = 15, dpi = 600, bg = "white")
+ggsave("./Figs/traceplot d=10.pdf", plot = traceplot_10, device = cairo_pdf, width = 30, height = 15, dpi = 600, bg = "white")
 
 # Effective sample size 
 ## d = 2
@@ -644,7 +643,7 @@ ess_10_M/n.chain
 d = 6
 ##B=1000
 B <- 1000
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_1000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_1000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_6_1000_G <- 0
@@ -662,7 +661,7 @@ ave.time_6_1000_G = as.numeric((init.time_6_1000_G+sum(run.time_6_1000_G))/chain
 ave.time_6_1000_M = as.numeric(sum(run.time_6_1000_M)/chain.length)
 ##B=2500
 B <- 2500
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_2500_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_2500_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_6_2500_G <- 0
@@ -680,7 +679,7 @@ ave.time_6_2500_G = as.numeric((init.time_6_2500_G+sum(run.time_6_2500_G))/chain
 ave.time_6_2500_M = as.numeric(sum(run.time_6_2500_M)/chain.length)
 ##B=5000
 B <- 5000
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_5000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_5000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_6_5000_G <- 0
@@ -698,7 +697,7 @@ ave.time_6_5000_G = as.numeric((init.time_6_5000_G+sum(run.time_6_5000_G))/chain
 ave.time_6_5000_M = as.numeric(sum(run.time_6_5000_M)/chain.length)
 ##B=15000
 B <- 15000
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_15000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_15000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_6_15000_G <- 0
@@ -716,7 +715,7 @@ ave.time_6_15000_G = as.numeric((init.time_6_15000_G+sum(run.time_6_15000_G))/ch
 ave.time_6_15000_M = as.numeric(sum(run.time_6_15000_M)/chain.length)
 ##B=20000
 B <- 20000
-dic_name_B <- paste0("/Users/chenyangzhong/Desktop/Data_paper/OUD/d=", d, ",B=", B, ",")
+dic_name_B <- paste0("./OUD/d=", d, ",B=", B, ",")
 res_6_20000_G <- list.load(paste0(dic_name_B, "result.rdata"))
 res_6_20000_M <- list.load(paste0(dic_name_B, "result_mrw.rdata"))
 init.time_6_20000_G <- 0
@@ -745,6 +744,6 @@ timplots <- ggplot(dat, aes(x = x, y = y, color = Algorithm)) +
   labs(title = "", x = "B", y="Time per iteration (s)") +
   theme(text = element_text(size=60), legend.spacing.y = unit(1, 'cm')) +
   guides(color = guide_legend(keywidth = 5, keyheight = 5))
-ggsave("/Users/chenyangzhong/Desktop/Data_paper/Figs/Time.pdf", plot = timplots, device = cairo_pdf, height = 12, width = 20, dpi = 300, bg = "white")
+ggsave("./Figs/Time.pdf", plot = timplots, device = cairo_pdf, height = 12, width = 20, dpi = 300, bg = "white")
 
 
